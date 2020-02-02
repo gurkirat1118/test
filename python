@@ -1,0 +1,49 @@
+from requests import get
+from bs4 import BeautifulSoup
+
+url = 'https://www.amazon.in/s?k=i+phone&ref=nb_sb_noss_2'
+
+response = get(url)
+
+html_soup = BeautifulSoup(response.text, 'html.parser')
+#print(type(html_soup))
+#print(html_soup)
+
+
+apple = html_soup.find_all('div', class_ = 'lister-item mode-advanced')
+print(len(apple))
+
+# Lists to store the scraped data in
+names = []
+prices = []
+imdb_ratings = []
+
+discounts = []
+
+for container in apple:
+    # If the site has Metascore, then extract:
+    if container.find('div', class_="sb_3dDFIaal") is not None:
+        
+        # The name
+        name = container.h2.find('span', class_= "a-size-medium a-color-base a-text-normal").text
+        names.append(name)
+        
+       # The price
+        price = container.h2.find('span', class_ = "a-price-whole").text
+        prices.append(year)
+
+        #The IMDB rating
+        imdb = container.find('div', class_="sb_3dDFIaal").text
+        imdb_ratings.append(imdb)
+
+        
+        #The discount
+        discount = float(container.span.text)
+        votes.append(int(vote))
+
+import pandas as pd
+apple_data= pd.DataFrame(data={'name':names,'price':prices,'rating':imdb_ratings,'discount':discounts})
+print(apple_data)
+apple_data.to_csv('apple_data.csv')
+print('data is saved')
+
